@@ -11,6 +11,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilMicrophone,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -23,6 +24,16 @@ const _nav = [
     badge: {
       color: 'info',
       text: 'NEW',
+    },
+  },
+  {
+    component: CNavItem,
+    name: 'Parts',
+    to: '/parts',
+    icon: <CIcon icon={cilMicrophone} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      text: '<<<',
     },
   },
   {
