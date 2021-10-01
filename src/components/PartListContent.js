@@ -5,47 +5,17 @@ import DropdownTreeSelect from 'react-dropdown-tree-select'
 import 'react-dropdown-tree-select/dist/styles.css'
 import './dropdown-tree-select.css'
 
-const testData = {
-  label: 'search me',
-  value: 'searchme',
-  expanded: true,
-  children: [
-    {
-      label: 'Do not search me',
-      value: 'searchmetoo',
-      children: [
-        {
-          label: 'ne555',
-          value: '555',
-        },
-      ],
-    },
-    {
-      label: 'search me too',
-      value: 'searchmetoo',
-      expanded: true,
-      children: [
-        {
-          label: 'ne555',
-          value: '555',
-        },
-      ],
-    },
-    {
-      label: 'Sad Elephant',
-      value: 'sedel',
-    },
-  ],
-}
+import { ElectronicComponent } from '../resource/electric'
 
 const SQ_SERVER = 'http://center.irnok.net:3020/sparql'
 // const SQ_SERVER = 'http://localhost:3020/sparql'
 
-const SQ = `PREFIX dbr: <http://dbpedia.org/resource/>
+const sparqlQuery = (rootResource) => {
+  const SQ = `PREFIX dbr: <http://dbpedia.org/resource/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select * where {
-  ?class rdfs:subClassOf dbr:Electronic_component .
+  ?class rdfs:subClassOf ${rootResource} .
   bind(replace(strafter(str(?class),str(dbr:)),'_',' ') as ?class_name) .
   OPTIONAL {
     SERVICE <http://dbpedia.org/sparql> {
@@ -56,6 +26,46 @@ select * where {
     }
   }
 } limit 100`
+  return SQ
+}
+
+const loadTree = (parentNode) => {
+  const q = 'query=' + encodeURIComponent(sparqlQuery(parentNode.value))
+  const p = fetch(SQ_SERVER, {
+    method: 'POST',
+    body: q,
+    headers: {
+      Accept: 'application/sparql-results+json,*/*;q=0.9',
+      'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+  })
+  console.log(q)
+  const r = p
+    .then((resp) => resp.json())
+    .then((answer) => {
+      return answer['results']['bindings']
+    })
+    .then((bindings) => {
+      return bindings.map((item) => {
+        const node = {
+          value: item.class.value,
+          label: item.title === undefined ? item.class_name.value : item.title.value,
+          expanded: true,
+        }
+        return node
+      })
+    })
+    .then((nodes) => {
+      return { ...parentNode, children: nodes }
+    })
+    .then((tree) => {
+      console.log(JSON.stringify(tree))
+      return tree
+    })
+  return r
+}
+
+// ------- Stuff for the component ------
 
 const onChange = (currentNode, selectedNodes) => {
   console.log('onChange::', currentNode, selectedNodes)
@@ -74,40 +84,12 @@ const PartListContent = (props) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    const q = 'query=' + encodeURIComponent(SQ)
-    // const q = 'query=select * where { ?s ?p ?o } limit 2'
-    const p = fetch(SQ_SERVER, {
-      method: 'POST',
-      body: q,
-      headers: {
-        Accept: 'application/sparql-results+json,*/*;q=0.9',
-        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-    })
-    console.log(q)
-    p.then((resp) => resp.json())
-      .then((answer) => {
-        console.log(JSON.stringify(answer, null, 1))
-        return answer['results']['bindings']
-      })
-      .then((bindings) => {
-        return bindings.map((item) => {
-          return {
-            value: item.class.value,
-            label: item.title === undefined ? item.class_name.value : item.title.value,
-            expanded: true,
-          }
-        })
-      })
-      .then((tree) => {
-        const data = {
-          value: '<http://dbpedia.org/resource/Electronic_component>',
-          label: 'Компоненты',
-          expanded: true,
-          children: tree,
-        }
-        setData(data)
-      })
+    const rootNode = {
+      value: ElectronicComponent,
+      label: 'Компоненты',
+      expanded: true,
+    }
+    loadTree(rootNode).then((data) => setData(data))
   }, [])
 
   return (
