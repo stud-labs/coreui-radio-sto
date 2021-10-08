@@ -12,6 +12,7 @@ import {
   cilSpeedometer,
   cilStar,
   cilMicrophone,
+  cilBug,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -35,6 +36,12 @@ const _nav = [
       color: 'info',
       text: '<<<',
     },
+  },
+  {
+    component: CNavItem,
+    name: '--DEBUG',
+    to: '/debug',
+    icon: <CIcon icon={cilBug} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

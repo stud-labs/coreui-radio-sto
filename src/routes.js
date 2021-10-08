@@ -54,10 +54,13 @@ const Toasts = React.lazy(() => import('./views/components/notifications/toasts/
 const Widgets = React.lazy(() => import('./views/components/widgets/Widgets'))
 const PartListContent = React.lazy(() => import('./components/PartListContent'))
 
+const DebugContent = React.lazy(() => import('./components/PartTable'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/parts', name: 'Parts', component: PartListContent },
+  { path: '/debug', name: 'Debug', component: DebugContent },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },

@@ -15,7 +15,7 @@ const sparqlQuery = (rootResource) => {
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select * where {
-  ?class rdfs:subClassOf ${rootResource} .
+  ?class rdfs:subClassOf <${rootResource}> .
   bind(replace(strafter(str(?class),str(dbr:)),'_',' ') as ?class_name) .
   OPTIONAL {
     SERVICE <http://dbpedia.org/sparql> {
@@ -30,7 +30,8 @@ select * where {
 }
 
 const loadTree = (parentNode) => {
-  const q = 'query=' + encodeURIComponent(sparqlQuery(parentNode.value))
+  const queryText = sparqlQuery(parentNode.value)
+  const q = 'query=' + encodeURIComponent(queryText)
   const p = fetch(SQ_SERVER, {
     method: 'POST',
     body: q,
@@ -39,7 +40,7 @@ const loadTree = (parentNode) => {
       'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
     },
   })
-  console.log(q)
+  console.log(queryText)
   const r = p
     .then((resp) => resp.json())
     .then((answer) => {
@@ -47,11 +48,14 @@ const loadTree = (parentNode) => {
     })
     .then((bindings) => {
       return bindings.map((item) => {
-        const node = {
+        var node = {
           value: item.class.value,
           label: item.title === undefined ? item.class_name.value : item.title.value,
           expanded: true,
         }
+        // loadTree(node).then((newNode) => {
+        //   node = newNode
+        // })
         return node
       })
     })
@@ -84,6 +88,7 @@ const PartListContent = (props) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
+    setData([])
     const rootNode = {
       value: ElectronicComponent,
       label: 'Компоненты',
