@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{CREATE} \PYG{k}{TABLE} \PYG{n}{Persons} \PYG{p}{(}
+    \PYG{n}{PersonID} \PYG{n+nb}{int}\PYG{p}{,}
+    \PYG{n}{LastName} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{255}\PYG{p}{),}
+    \PYG{n}{FirstName} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{255}\PYG{p}{),}
+    \PYG{n}{Address} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{255}\PYG{p}{),}
+    \PYG{n}{City} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{255}\PYG{p}{)}
+\PYG{p}{);}
+\end{Verbatim}

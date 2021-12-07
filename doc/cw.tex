@@ -110,7 +110,9 @@ CREATE TABLE Persons (
 
 \begin{listing}[htbp]
 \begin{center}
-\begin{minted}[fontsize=\normalsize]{sql}
+
+{\footnotesize
+\begin{verbatim}
 CREATE TABLE Persons (
     PersonID int,
     LastName varchar(255),
@@ -118,14 +120,15 @@ CREATE TABLE Persons (
     Address varchar(255),
     City varchar(255)
 );
-\end{minted}
+\end{verbatim}}
+
 \end{center}
 \caption{Скрипт SQL для создания таблицы Persons}\label{fig:crate-table}
 \end{listing}
 
 \chapter{Тестирование ....}
 
-Разработан набор тестов структуры БД (см.~\ref{sec:struct-bd} на стр.~\pageref{sec:struct-bd}).
+Разработан набор тестов структуры БД (см.~\ref{sec:struct-bd} на стр.~\pageref{sec:struct-bd}).   Загрузка скрипта базы данных осуществляется при помощи команды \texttt{mysql}.  Дамп существующей БД выполняется командой \verb|mysql-dump|.
 
 \begin{figure}[hbtp]
   \centering

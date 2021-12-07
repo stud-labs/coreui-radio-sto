@@ -49,6 +49,7 @@ const _nav = [
   },
   {
     component: CNavItem,
+
     name: 'Colors',
     to: '/theme/colors',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
